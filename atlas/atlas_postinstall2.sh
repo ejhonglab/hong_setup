@@ -9,7 +9,7 @@ sudo sed -i.bak "/^# deb .*partner/ s/^# //" /etc/apt/sources.list
 sudo apt update
 
 # Install other packages
-sudo apt install -y git vlc texstudio openssh-server
+sudo apt install -y git vlc texstudio openssh-server default-jre
 
 # Install updates
 sudo apt -y full-upgrade
