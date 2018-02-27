@@ -61,3 +61,4 @@ fi
 
 # TODO make these the systemwide defaults?
 sudo -u $USER ./ui_settings.sh
+sudo -u $USER ./google_drive_links.sh
