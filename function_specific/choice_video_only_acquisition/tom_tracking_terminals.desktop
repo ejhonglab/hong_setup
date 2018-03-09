@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=choice acquisition
+Comment=Opens terminals to run choice aquisition on a computer that can't track.
+# TODO how to make this relative? how is this usually handled w/ installers?
+Exec=/home/tom/src/hong_setup/function_specific/choice_video_only_acquisition/tom_tracking_terminals.sh
+Terminal=false
+Categories=Utility;
+Type=Application
+Icon=/home/tom/src/hong_setup/function_specific/choice_video_only_acquisition/tom_tracking_terminals.svg

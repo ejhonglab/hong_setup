@@ -12,7 +12,7 @@ fi
 
 apt update
 # vim-gtk was compiled with system clipboard support, unlike vim-nox
-apt install -y vim-gtk git xclip
+apt install -y vim-gtk git xclip xdotool expect
 
 # TODO maybe install conda instead?
 # https://www.digitalocean.com/community/tutorials/
