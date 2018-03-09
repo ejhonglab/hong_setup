@@ -14,7 +14,7 @@ echo "most_recent_exp: ${most_recent_exp}"
 
 # TODO why is first terminal not getting resized appropriately
 gnome-terminal --working-directory=${most_recent_exp} --role=tracking -e \
-"${this_script_path}/../ubuntu_16.04/puttext_terminal \"roslaunch choice choice.launch video_only:=True\""
+"${this_script_path}/../../ubuntu_16.04/puttext_terminal \"roslaunch choice choice.launch video_only:=True\""
 sleep 0.5
 # sleep / wait for display?
 xdotool keydown ctrl keydown super Left keyup ctrl keyup super
@@ -22,7 +22,7 @@ xdotool keydown ctrl keydown super Left keyup ctrl keyup super
 # may like to open my notes.txt here? (vi, but then less nice to other users)
 # $EDITOR?
 gnome-terminal --working-directory=${most_recent_exp} --role=notes -e \
-"/home/tom/src/hong_setup/ubuntu_16.04/puttext_terminal \"vi notes.txt\""
+"${this_script_path}/../../ubuntu_16.04/puttext_terminal \"vi notes.txt\""
 sleep 0.5
 xdotool keydown ctrl keydown super Right keyup ctrl keyup super
 
