@@ -18,6 +18,9 @@ apt install -y vim-gtk git xclip xdotool expect
 # https://www.digitalocean.com/community/tutorials/
 # how-to-install-the-anaconda-python-distribution-on-ubuntu-16-04
 apt install -y python-pip python3-pip
+# TODO some reason this seems to have been necessary on cthulhu but not other
+# computers?
+apt install -y python3-tk
 
 # TODO install dotfiles from github thing
 # TODO install conda in a way that won't conflict with ROS?
