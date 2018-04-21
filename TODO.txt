@@ -1,0 +1,7 @@
+-add printer (or at least prompt for IP and do the rest, assuming same model) 
+ -set to two-sided (long edge)
+ -any way to make it so it doesn't always prompt to use letter instead of A4?
+  -what is telling it to use A4? is it program dependent (mendeley for example)
+
+
+- add both NASs in "connect to a server" menu w/ consistent names
