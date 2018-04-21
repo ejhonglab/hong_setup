@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # turn off screen / lock after 30 minutes
+# TODO something seems to have screwed this up on atlas?
 gsettings set org.gnome.desktop.session idle-delay 1800
 
 # default 2x2 workspaces
@@ -17,3 +18,11 @@ gsettings set org.gnome.settings-daemon.plugins.media-keys volume-mute '<Alt>m'
 gsettings set org.gnome.settings-daemon.plugins.media-keys volume-up '<Alt>k'
 gsettings set org.gnome.settings-daemon.plugins.media-keys volume-down '<Alt>j'
 # TODO play / pause?
+
+# Disable Ctrl-Q systemwide, chiefly to stop accidentally closing firefox when
+# trying to close tabs. There are Firefox extensions for this, but this is
+# easier to automate.
+# TODO see choice acqusition install script to see how to append (without
+# duplicates) to one of these lists
+# https://askubuntu.com/questions/597395/how-to-set-custom-keyboard-shortcuts-from-terminal
+
