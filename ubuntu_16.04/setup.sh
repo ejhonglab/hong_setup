@@ -17,7 +17,7 @@ apt install -y vim-gtk git xclip xdotool expect
 # TODO maybe install conda instead?
 # https://www.digitalocean.com/community/tutorials/
 # how-to-install-the-anaconda-python-distribution-on-ubuntu-16-04
-apt install -y python-pip python3-pip
+apt install -y python3-pip python3-venv direnv
 # TODO some reason this seems to have been necessary on cthulhu but not other
 # computers?
 apt install -y python3-tk
