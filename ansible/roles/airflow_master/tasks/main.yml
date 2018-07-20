@@ -1,0 +1,11 @@
+- name: Installing Apache Airflow.
+  pip:
+    name: apache-airflow[crypto, postgres]
+
+# TODO do after changing settings to psql + installing that. let role dep take
+# care of install?
+# TODO need to make users and stuff in advance for airflow?
+- name: Initializing Airflow database.
+  # TODO need shell for this? (requires env?)
+  command: airflow initdb
+

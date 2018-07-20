@@ -1,0 +1,12 @@
+- make bootstrapping script to change passwords on all accounts / setup keys
+  for ansible? (use ansible-inventory --list -i hosts and parse JSON hosts ->
+  iterate?)
+
+- script (part of script?) to symlink this host file into default place?
+  or point to this?
+
+- add AllowUsers lab tom (approp re: group) to sshd_config?
+
+- support for adding groups of IPs outside of the VPN to the VPN?
+
+

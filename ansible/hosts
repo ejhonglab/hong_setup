@@ -1,0 +1,54 @@
+#gateway
+#switch
+#wifi
+#printer
+
+# TODO rename hostnames of nas1/2 and change group name to storage
+[data]
+storage
+
+[workstations:children]
+analysis
+behavior
+
+# TODO just make an "imaging" group, or acquisition parent of those + behavior,
+# etc?
+
+[analysis]
+atlas
+gerty
+cthulhu
+
+[behavior:children]
+tom_behavior
+kristina_behavior
+
+[tom_behavior]
+choice
+hong6
+
+[kristina_behavior]
+walking
+walking2
+choice
+hong6
+
+
+[behind_gateway:children]
+analysis
+# TODO way to just specify a group that has both a host and another group under
+# it? or need to be indirect like this?
+extra_behind_gateway
+
+[extra_behind_gateway]
+storage
+
+# TODO use this to define which clients need VPN config
+# couldn't really use this to setup VPN, because hostnames have largely been
+# derived from VPN, and this uses hostnames...
+
+
+# TODO add windows machines?
+# TODO all other linux workstations added?
+# TODO TODO have hostname for smaller NAS?
+# is it even on VPN?

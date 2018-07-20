@@ -1,0 +1,37 @@
+---
+- hosts: all
+  name: Checking all hosts are appropriate Ubuntu version (16.04).
+  tasks:
+    - debug:
+        msg: "checking {{ inventory_hostname }}"
+    - debug:
+        msg: "ansible_os_family"
+    - assert:
+        that: "ansible_os_family == 'Ubuntu'"
+
+#- hosts: atlas
+#  name:  Generate SSH key for Ansible administration.
+#  # TODO any chance of this screwing with existing account?
+#  user:
+#    name: tom
+#    # TODO should this actually be passwordless? for what use cases?
+#    # 
+#    generate_ssh_key: yes
+#    # I'm learning towards keeping key file at ~/.ssh/id_rsa, to avoid having to
+#    # use flags when calling later.
+#    # I guess one reason to have a separate key, is to not necessarily have a
+#    # naive administrator be able to ssh to all, with same permissions as
+#    # ansible, w/ default ssh flags?
+#  
+## TODO replace atlas w/ a var for administration machine(s) and tom w/ var for
+## administration user(s)
+## should be all except atlas
+#- hosts: all:!atlas
+#
+#- hosts: atlas
+#  roles:
+#    # TODO need to explicitly specify postgre even though in dependency?
+#    - airflow_master
+#- hosts: analysis
+#  roles:
+#    - airflow_worker
