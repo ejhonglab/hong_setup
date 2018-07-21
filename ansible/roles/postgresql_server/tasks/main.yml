@@ -1,0 +1,9 @@
+---
+- name: installing postgresql apt packages
+  apt:
+    name: '{{ packages }}'
+    update_cache: yes
+  vars:
+    packages:
+    - postgresql
+    - postgresql-contrib

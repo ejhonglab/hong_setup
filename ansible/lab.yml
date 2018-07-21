@@ -1,33 +1,64 @@
 ---
 - hosts: all
+  # TODO use variables in the name + checked values?
   name: Checking all hosts are appropriate Ubuntu version (16.04).
   tasks:
-    - debug:
-        msg: "checking {{ inventory_hostname }}"
-    - debug:
-        msg: "ansible_os_family"
     - assert:
-        that: "ansible_os_family == 'Ubuntu'"
+        that: ansible_distribution == 'Ubuntu'
+    - assert:
+        that: ansible_distribution_version == '16.04'
 
-#- hosts: atlas
-#  name:  Generate SSH key for Ansible administration.
-#  # TODO any chance of this screwing with existing account?
-#  user:
-#    name: tom
-#    # TODO should this actually be passwordless? for what use cases?
-#    # 
-#    generate_ssh_key: yes
-#    # I'm learning towards keeping key file at ~/.ssh/id_rsa, to avoid having to
-#    # use flags when calling later.
-#    # I guess one reason to have a separate key, is to not necessarily have a
-#    # naive administrator be able to ssh to all, with same permissions as
-#    # ansible, w/ default ssh flags?
-#  
-## TODO replace atlas w/ a var for administration machine(s) and tom w/ var for
-## administration user(s)
-## should be all except atlas
-#- hosts: all:!atlas
-#
+# TODO replace atlas w/ a var for administration machine(s) and tom w/ var for
+# administration user(s)
+# TODO make ansible only prompt for password if necessary for this, and
+# afterwards default to using pubkeys w/o prompting for password (possible?)
+- hosts: all:!atlas
+  name:  Generate/distribute SSH key for Ansible administration.
+  vars:
+    # up here so it doesn't have to be evaluated for each host. make sense?
+    admin_pubkey: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+  tasks:
+    # TODO move to a separate play for localhost? (so it doesn't seem to display
+    # as a random external host acting back on this one?)
+    # TODO test this key generation on a new machine
+    #
+    # I'm learning towards keeping key file at ~/.ssh/id_rsa, to avoid having
+    # to use flags when calling later.
+    #
+    # I guess one reason to have a separate key, is to not necessarily have a
+    # naive administrator be able to ssh to all, with same permissions as
+    # ansible, w/ default ssh flags?
+    - local_action: user name=tom generate_ssh_key=yes
+      run_once: True
+    - authorized_key:
+       # TODO make variable
+       user: lab
+       # TODO does lookup path need to be absolute?
+       # TODO TODO is this lookup on the local or remote host?
+       # relative to user passed w/ -u or current user before that?
+       key: '{{ admin_pubkey }}'
+       # TODO get from variable (atlas work? atlas.hong?)
+       key_options: 'from="10.0.0.8"'
+    # TODO ensure openssh server is latest?
+    # TODO will need root access!!
+    - template:
+        src: templates/sshd_config.j2
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: '0644'
+        # TODO other validate example was in a string. still valid?
+        # TODO test validation is working
+        validate: /usr/sbin/sshd -t -f %s 
+      notify:
+        - restart sshd
+      become: yes
+
+  handlers:
+    - name: restart sshd
+      service: name=sshd state=restarted
+      become: yes
+
 #- hosts: atlas
 #  roles:
 #    # TODO need to explicitly specify postgre even though in dependency?
