@@ -1,8 +1,16 @@
 ---
 - hosts: all
   # TODO use variables in the name + checked values?
-  name: Checking all hosts are appropriate Ubuntu version (16.04).
   tasks:
+    # TODO should this be refactored to be host independent? (include or
+    # something?)
+    # TODO need to use groups['airflow_masters'] here?
+    - local_action: assert that="{{ groups['ansible_admins'] | length }} == 1"
+      run_once: True
+    # TODO maybe factor to airflow stuff below for clarity. problem is that
+    # play applied to the single master should not start until this is checked.
+    - local_action: assert that="{{ groups['airflow_masters'] | length }} == 1"
+      run_once: True
     - assert:
         that: ansible_distribution == 'Ubuntu'
     - assert:
@@ -12,12 +20,24 @@
 # administration user(s)
 # TODO make ansible only prompt for password if necessary for this, and
 # afterwards default to using pubkeys w/o prompting for password (possible?)
-- hosts: all:!atlas
+- hosts: all
   name:  Generate/distribute SSH key for Ansible administration.
   vars:
     # up here so it doesn't have to be evaluated for each host. make sense?
     admin_pubkey: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+    ansible_admin_host: "{{ groups['ansible_admins'][0] }}"
   tasks:
+    - command: systemctl enable ssh
+      args:
+        creates: /etc/
+      become: yes
+        
+    # neither this nor the service module was working for me...
+    #- systemd:
+    #    name: ssh
+    #    enabled: yes
+    #  become: yes
+    
     # TODO move to a separate play for localhost? (so it doesn't seem to display
     # as a random external host acting back on this one?)
     # TODO test this key generation on a new machine
@@ -33,14 +53,10 @@
     - authorized_key:
        # TODO make variable
        user: lab
-       # TODO does lookup path need to be absolute?
-       # TODO TODO is this lookup on the local or remote host?
-       # relative to user passed w/ -u or current user before that?
        key: '{{ admin_pubkey }}'
        # TODO get from variable (atlas work? atlas.hong?)
-       key_options: 'from="10.0.0.8"'
+       key_options: 'from="{{ ansible_admin_host }}"'
     # TODO ensure openssh server is latest?
-    # TODO will need root access!!
     - template:
         src: templates/sshd_config.j2
         dest: /etc/ssh/sshd_config
@@ -59,10 +75,15 @@
       service: name=sshd state=restarted
       become: yes
 
-#- hosts: atlas
-#  roles:
-#    # TODO need to explicitly specify postgre even though in dependency?
-#    - airflow_master
+# TODO problem that group name is also a role name?
+- hosts: airflow_masters[0]
+  connection: local
+  
+  roles:
+    # TODO need to explicitly specify postgre even though in dependency?
+    # TODO need become for postgre? sufficient to let postgre role invoke that?
+    - airflow_master
+
 #- hosts: analysis
 #  roles:
 #    - airflow_worker

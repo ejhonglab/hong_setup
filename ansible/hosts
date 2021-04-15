@@ -15,7 +15,8 @@ behavior
 # etc?
 
 [analysis]
-atlas
+# TODO need to specify each time this host is put in a group?
+atlas #ansible_host=atlas.hong
 gerty
 cthulhu
 
@@ -47,6 +48,14 @@ storage
 # couldn't really use this to setup VPN, because hostnames have largely been
 # derived from VPN, and this uses hostnames...
 
+# these lists are checked to only have one element, and first element is taken
+# for tasks
+# TODO better alternative?
+[ansible_admins]
+atlas #ansible_host=atlas.hong
+
+[airflow_masters]
+atlas #ansible_host=atlas.hong
 
 # TODO add windows machines?
 # TODO all other linux workstations added?

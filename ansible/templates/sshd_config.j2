@@ -15,6 +15,9 @@ Port 22
 # to manually be added.
 # setting listen address as hostname w/o suffix made host unreachable.
 ListenAddress {{ inventory_hostname }}.hong
+# this line is to include SSH-ing from a computer to itself
+# as the hostname without the suffix is defined in all of the /etc/hosts files
+ListenAddress {{ ansible_fqdn }}
 Protocol 2
 
 # HostKeys for protocol version 2

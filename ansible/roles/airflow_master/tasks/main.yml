@@ -1,11 +1,60 @@
 - name: Installing Apache Airflow.
+  # TODO TODO make it use python3... 
   pip:
-    name: apache-airflow[crypto, postgres]
+    # TODO [crypto, postgres] was not working. how to fix?
+    # same effect to install apache-airflow[crypto] after?
+    name: "apache-airflow[postgres]"
+    # TODO need full path?
+    executable: pip3
 
-# TODO do after changing settings to psql + installing that. let role dep take
-# care of install?
-# TODO need to make users and stuff in advance for airflow?
+# TODO maybe use SHOW config_file to keep this constant across postgres
+# versions? alt?
+#- name: 
+
+# This depends on the psygopg2 that the above should install (should be using
+# same python)
+- name: Setting up Airflow database in postgres
+  # TODO can i put 'tasks' here, and include multiple?
+  postgresql_db:
+    name: airflow
+
+- name: Setting up Airflow postgres user
+  postgresql_user:
+    # TODO make sense to do this after db creation?
+    db: airflow
+    name: airflow
+    # TODO diff authentication?
+    password: airflow
+    # TODO default privs? minimum required for airflow to work?
+    # this equiv to all privs on all tables in schema public?
+    priv: ALL
+
+- name: Updating airflow.cfg
+  # TODO make so if a node is both a master and a worker, this is only run
+  # once
+  template:
+    src: ../common_airflow_templates/airflow.cfg.j2
+    dest: '{{ ansible_env.HOME }}/airflow/airflow.cfg'
+
 - name: Initializing Airflow database.
   # TODO need shell for this? (requires env?)
+  # TODO TODO this operate on postgresql db? need to do any airflow-specific
+  # setup of db first?
+  # TODO TODO specify how to detect whether this is already the place
+  # (now it reports change ever run)
   command: airflow initdb
 
+# TODO TODO services to start webserver and workers / scheduler
+
+- name: Make ~/src directory
+  file:
+    dest: '{{ ansible_env.HOME }}/srct'
+    state: directory
+  # TODO TODO TODO if already sudo / root, what does this do?
+  # possible to run part of role w/o privilege? remove toplevel become?
+
+- name: Cloning/updating Hong lab repo with Airflow DAGs (tasks)
+  git:
+    # TODO test this updates correctly
+    repo: https://github.com/tom-f-oconnell/hong_airflow.git
+    dest: '{{ ansible_env.HOME }}/srct/hong_airflow'

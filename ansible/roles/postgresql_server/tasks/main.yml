@@ -1,5 +1,5 @@
 ---
-- name: installing postgresql apt packages
+- name: Installing postgresql apt packages
   apt:
     name: '{{ packages }}'
     update_cache: yes
@@ -7,3 +7,10 @@
     packages:
     - postgresql
     - postgresql-contrib
+  become: yes
+
+- name: Setting up service so postgre starts on boot
+  service:
+    name: postgresql
+    enabled: yes
+  become: yes
